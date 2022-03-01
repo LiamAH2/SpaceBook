@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Image, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -9,7 +9,8 @@ class HomeScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: []
+      listData: [],
+      userData: []
     }
   }
 
@@ -17,12 +18,68 @@ class HomeScreen extends Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
     });
-  
-    this.getData();
+    this.getUserData();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+  }
+  
+  getLogo = async () =>
+  {
+    const userId = await AsyncStorage.getItem('@user_id');
+    const value = await AsyncStorage.getItem('@session_token');
+    return fetch("http://localhost:3333/api/1.0.0/user/" + userId + "/photo", {
+          'headers': {
+            'X-Authorization':  value
+          }
+        })
+        .then((res) => {
+            return res.blob();
+        })
+        .then((resBlob) => {
+          let data = URL.createObjectURL(resBlob);
+          this.setState({
+            isLoading: false,
+            photo: data
+          })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+  }
+
+  getUserData = async () => 
+  {
+    const userId = await AsyncStorage.getItem('@user_id');
+    const value = await AsyncStorage.getItem('@session_token');
+    return fetch("http://localhost:3333/api/1.0.0/user/" + userId, {
+          'headers': {
+            'X-Authorization':  value
+          }
+        })
+        .then((response) => {
+            if(response.status === 200){
+                return response.json()
+            }else if(response.status === 401){
+              console.log("Un Aurthorised");
+            }else if(response.status === 404){
+              console.log("Not Found");
+            }else if(response.status === 500){
+              console.log("Server Error");
+            }else{
+                throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+          this.setState({
+            userData: responseJson
+          })
+          this.getData();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
   }
 
   getData = async () => {
@@ -43,9 +100,9 @@ class HomeScreen extends Component {
         })
         .then((responseJson) => {
           this.setState({
-            isLoading: false,
             listData: responseJson
           })
+          this.getLogo();
         })
         .catch((error) => {
             console.log(error);
@@ -60,7 +117,7 @@ class HomeScreen extends Component {
   };
 
   render() {
-
+    
     if (this.state.isLoading){
       return (
         <View
@@ -76,7 +133,22 @@ class HomeScreen extends Component {
     }else{
       return (
         <View>
+          <View style={styles.container1}>
+
+          <Image
+          style={styles.logo}
+          source={{uri: this.state.photo}}
+          />
+          
+          <Text>{this.state.userData.first_name}</Text>
+          <Text>{this.state.userData.last_name}</Text>
+
+          <Text>{this.state.userData.email}</Text>
+        </View>
+
+          {/* searched list of friends */}
           <FlatList
+            style={styles.container2}
                 data={this.state.listData}
                 renderItem={({item}) => (
                     <View>
@@ -92,6 +164,22 @@ class HomeScreen extends Component {
   }
 }
 
+const styles = StyleSheet.create(
+  {
+    container1:
+    {
+      padding: 10
+    },
+    container2:
+    {
+      padding:10
+    },
+    logo:
+    {
+      width: 200,
+      height: 200
+    }
+  });
 
 
 export default HomeScreen;

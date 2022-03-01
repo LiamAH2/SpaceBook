@@ -36,6 +36,7 @@ class LoginScreen extends Component{
         .then(async (responseJson) => {
                 console.log(responseJson);
                 await AsyncStorage.setItem('@session_token', responseJson.token);
+                await AsyncStorage.setItem('@user_id', responseJson.id);
                 this.props.navigation.navigate("Home");
         })
         .catch((error) => {
