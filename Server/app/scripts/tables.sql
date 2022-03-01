@@ -1,4 +1,4 @@
-USE ashley_student; # Change to your mudfoot username
+USE hensberl; # Change to your mudfoot username
 
 # First drop the tables if they do not already exist
 # Note: has to be done in a certian order for referential integrity
