@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, StyleSheet, Image, } from 'react-native';
+import {View, Text, Button, StyleSheet, Image, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -132,7 +132,6 @@ class HomeScreen extends Component {
       );
     }else{
       return (
-        <View>
           <View style={styles.container1}>
 
           <Image
@@ -144,19 +143,12 @@ class HomeScreen extends Component {
           <Text>{this.state.userData.last_name}</Text>
 
           <Text>{this.state.userData.email}</Text>
-        </View>
 
-          {/* searched list of friends */}
-          <FlatList
-            style={styles.container2}
-                data={this.state.listData}
-                renderItem={({item}) => (
-                    <View>
-                      <Text>{item.user_givenname} {item.user_familyname}</Text>
-                    </View>
-                )}
-                keyExtractor={(item,index) => item.user_id.toString()}
-              />
+          <Button
+          title="Log Out"
+          onPress={() => this.props.navigation.navigate("Logout")}
+          />
+
         </View>
       );
     }
@@ -168,11 +160,11 @@ const styles = StyleSheet.create(
   {
     container1:
     {
+      flex:1,
+      flexDirection: 'column',
+      justifyContent:'space-evenly',
+      alignItems: 'center',
       padding: 10
-    },
-    container2:
-    {
-      padding:10
     },
     logo:
     {
