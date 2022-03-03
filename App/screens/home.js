@@ -148,6 +148,10 @@ class HomeScreen extends Component {
           title="Log Out"
           onPress={() => this.props.navigation.navigate("Logout")}
           />
+          <Button
+          title="Edit Profile"
+          onPress={() => this.props.navigation.navigate("Edit")}
+          />
 
         </View>
       );
