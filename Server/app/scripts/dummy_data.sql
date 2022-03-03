@@ -1,4 +1,4 @@
-use hensbergl;
+use hensberl;
 
 INSERT INTO spacebook_users (user_givenname, user_familyname, user_email, user_password, user_salt) VALUES ("Ashley", "Williams", "ashley.williams@mmu.ac.uk", "this account wont work", "because these values aren't hashed");
 INSERT INTO spacebook_users (user_givenname, user_familyname, user_email, user_password, user_salt) VALUES ("Matthew", "Henry", "m.henry@gmail.com", "this account wont work", "because these values aren't hashed");
