@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Button, StyleSheet, Image, ScrollView, TextInput } from 'react-native';
+import {View, Text, Button, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera } from 'expo-camera';
 
@@ -137,7 +137,7 @@ class EditScreen extends Component {
     let res = await fetch(data.base64);
     let blob = await res.blob();
 
-    return fetch("http://localhost:3333/api/1.0.0/user/" + userID + "/photo", {
+    return fetch("http://localhost:3333/api/1.0.0/user/" + userId + "/photo", {
         method: "POST",
         headers: {
             "Content-Type": "image/png",
@@ -147,6 +147,7 @@ class EditScreen extends Component {
     })
     .then((response) => {
         console.log("Picture added", response);
+        {window.location.reload(false);}
     })
     .catch((err) => {
         console.log(err);
@@ -253,7 +254,7 @@ takePicture = async () => {
           />
            <Button
           title="Edit Picture"
-          onPress={() => this.setState({editing: false})}
+          onPress={() => this.setState({editing: true})}
           />
           <Text>{this.state.userData.first_name}</Text>
           <Text>{this.state.userData.last_name}</Text>
