@@ -127,31 +127,31 @@ class EditScreen extends Component {
     const value = await AsyncStorage.getItem('@session_token');
     let to_send = {};
 
-    if (this.state.first_name != this.state.first_name){
-      to_send['user_givenname'] = this.state.first_name;
+    if (this.state.first_name != this.state.userData.first_name){
+      to_send['first_name'] = this.state.first_name;
     }
 
-    if (this.state.last_name != this.state.last_name){
-      to_send['user_familyname'] = this.state.last_name;
+    if (this.state.last_name != this.state.userData.last_name){
+      to_send['last_name'] = this.state.last_name;
     }
 
-    if (this.state.email != this.state.email){
-      to_send['user_email'] = this.state.email;
+    if (this.state.email != this.state.userData.email){
+      to_send['email'] = this.state.email;
     }
 
     console.log(JSON.stringify(to_send));
 
-    return fetch("http://localhost:3333/api/1.0.0/user/", {
+    return fetch("http://localhost:3333/api/1.0.0/user/8", {
         method: 'PATCH',
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'X-Authorization':  value
         },
         body: JSON.stringify(to_send)
     })
-    .then((responseJson) => {
-        this.setState({
-            listData: responseJson
-          })
+    .then((response) => {
+      if(response.status === 200)
+      {window.location.reload(false);}
     })
     .catch((error) => {
       console.log(error);
@@ -177,7 +177,7 @@ class EditScreen extends Component {
           <View style={styles.container1}>
 
           <Image
-          style={styles.logo}
+          style={styles.logo} 
           source={{uri: this.state.photo}}
           />
           <Button
@@ -193,19 +193,19 @@ class EditScreen extends Component {
                 <TextInput
                     placeholder="Enter new first name"
                     onChangeText={(first_name) => this.setState({first_name})}
-                    value={this.state.first_name}
+                    defaultValue={this.state.first_name}
                     style={{padding:5, borderWidth:1, margin:5}}
                 />
                 <TextInput
                     placeholder="enter new last name"
                     onChangeText={(last_name) => this.setState({last_name})}
-                    value={this.state.last_name}
+                    defaultValue={this.state.last_name}
                     style={{padding:5, borderWidth:1, margin:5}}
                 />
                 <TextInput
                     placeholder="Enter new email"
                     onChangeText={(email) => this.setState({email})}
-                    value={this.state.email}
+                    defaultValue={this.state.email}
                     style={{padding:5, borderWidth:1, margin:5}}
                 />
                 <Button
