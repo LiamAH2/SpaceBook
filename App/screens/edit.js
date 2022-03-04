@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, Button, StyleSheet, Image, ScrollView, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { Camera } from 'expo-camera';
 
 class EditScreen extends Component {
   constructor(props){
@@ -9,20 +9,26 @@ class EditScreen extends Component {
 
     this.state = {
       isLoading: true,
+      editing: false,
       listData: [],
-      userData: []
+      userData: [],
+      hasPermission: null,
+      type: Camera.Constants.Type.back
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.checkLoggedIn();
+      this.checkLoggedIn();  
     });
     this.getUserData();
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    this.setState({hasPermission: status === 'granted'});
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+    
   }
   
 
@@ -121,6 +127,43 @@ class EditScreen extends Component {
     }
   };
 
+ 
+
+  sendToServer = async (data) => {
+    // Get these from AsyncStorage
+    const userId = await AsyncStorage.getItem('@user_id');
+    const value = await AsyncStorage.getItem('@session_token');
+
+    let res = await fetch(data.base64);
+    let blob = await res.blob();
+
+    return fetch("http://localhost:3333/api/1.0.0/user/" + userID + "/photo", {
+        method: "POST",
+        headers: {
+            "Content-Type": "image/png",
+            "X-Authorization": value
+        },
+        body: blob
+    })
+    .then((response) => {
+        console.log("Picture added", response);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
+takePicture = async () => {
+  if(this.camera){
+      const options = {
+          quality: 0.5, 
+          base64: true,
+          onPictureSaved: (data) => this.sendToServer(data)
+      };
+      await this.camera.takePictureAsync(options); 
+  } 
+}
+
 //edditing current user info
   edit = async () => {
     const userId = await AsyncStorage.getItem('@user_id');
@@ -141,7 +184,7 @@ class EditScreen extends Component {
 
     console.log(JSON.stringify(to_send));
 
-    return fetch("http://localhost:3333/api/1.0.0/user/8", {
+    return fetch("http://localhost:3333/api/1.0.0/user/" + userId, {
         method: 'PATCH',
         headers: {
           'content-type': 'application/json',
@@ -172,7 +215,35 @@ class EditScreen extends Component {
           <Text>Loading..</Text>
         </View>
       );
-    }else{
+    }
+    else if(this.state.editing){
+      if(this.state.hasPermission){
+        return(
+          <View style={styles.container}>
+            <Camera 
+              style={styles.camera} 
+              type={this.state.type}
+              ref={ref => this.camera = ref}
+            >
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    this.takePicture();
+                  }}>
+                  <Text style={styles.text}> Take Photo </Text>
+                </TouchableOpacity>
+              </View>
+            </Camera>
+          </View>
+        );
+      }else{
+        return(
+          <Text>No access to camera</Text>
+        );
+      }
+    }
+    else{
       return (
           <View style={styles.container1}>
 
@@ -180,9 +251,9 @@ class EditScreen extends Component {
           style={styles.logo} 
           source={{uri: this.state.photo}}
           />
-          <Button
+           <Button
           title="Edit Picture"
-          onPress={() => this.props.navigation.navigate("Edit")}
+          onPress={() => this.setState({editing: false})}
           />
           <Text>{this.state.userData.first_name}</Text>
           <Text>{this.state.userData.last_name}</Text>
@@ -219,8 +290,7 @@ class EditScreen extends Component {
             </ScrollView>
         </View>
       );
-    }
-    
+    }  
   }
 }
 
@@ -239,10 +309,6 @@ const styles = StyleSheet.create(
     {
       width: 200,
       height: 200
-    },
-    butttongroup:
-    {
-      flex:1  
     }
   });
 
