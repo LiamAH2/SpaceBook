@@ -152,6 +152,10 @@ class HomeScreen extends Component {
           title="Edit Profile"
           onPress={() => this.props.navigation.navigate("Edit")}
           />
+          <Button
+          title="Friends"
+          onPress={() => this.props.navigation.navigate("Friends")}
+          />
 
         </View>
       );
