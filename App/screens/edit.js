@@ -195,7 +195,8 @@ takePicture = async () => {
     })
     .then((response) => {
       if(response.status === 200)
-      {window.location.reload(false);}
+      return response.json();
+      window.location.reload(false);
     })
     .catch((error) => {
       console.log(error);
@@ -220,9 +221,9 @@ takePicture = async () => {
     else if(this.state.editing){
       if(this.state.hasPermission){
         return(
-          <View style={styles.container}>
+          <View style={styles.container1}>
             <Camera 
-              style={styles.camera} 
+              style={styles.container1} 
               type={this.state.type}
               ref={ref => this.camera = ref}
             >
@@ -310,7 +311,12 @@ const styles = StyleSheet.create(
     {
       width: 200,
       height: 200
+    },
+    camera:
+    {
+      flex: 1,
     }
+
   });
 
 
