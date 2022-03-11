@@ -19,12 +19,7 @@ class PostScreen extends Component {
     componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn();
-           // this.getData();
-           // this.requestList();
         });
-
-       // this.getData();
-        //this.requestList();
     }
 
     componentWillUnmount() {
@@ -37,34 +32,6 @@ class PostScreen extends Component {
             this.props.navigation.navigate('Login');
         }
     };
-
-    /*getData = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
-        return fetch("http://localhost:3333/api/1.0.0/search", {
-            'headers': {
-                'X-Authorization': value
-            }
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    return response.json()
-                } else if (response.status === 401) {
-                    this.props.navigation.navigate("Login");
-                } else {
-                    throw 'Something went wrong';
-                }
-            })
-            .then((responseJson) => {
-                this.setState({
-                    isLoading: false,
-                    listData: responseJson
-                })
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
-*/
 
 
     //functions below
@@ -370,34 +337,9 @@ class PostScreen extends Component {
     render() {
         return (
             <View style={styles.container1}>
-                <FlatList
-                    data={this.state.requestList}
-                    renderItem={({ item }) => (
-                        <View>
-
-                            <Text>{item.first_name} {item.last_name}</Text>
-                            <Button
-                                title="Accept"
-                                onPress={() => this.acceptRequest(item.user_id)}
-                            />
-                            <Button
-                                title="Deny"
-                                onPress={() => this.rejectRequest(item.user_id)}
-                            />
-                        </View>
-                    )}
-                    keyExtractor={(item, index) => item.user_id.toString()}
-                />
-                <FlatList
-                    data={this.state.friendList}
-                    renderItem={({ item }) => (
-                        <View>
-
-                            <Text>{item.user_givenname} {item.user_familyname}</Text>
-
-                        </View>
-                    )}
-                    keyExtractor={(item, index) => item.user_id.toString()}
+                <Button
+                    title="Home"
+                    onPress={() => this.props.navigation.navigate("Home")}
                 />
             </View>
         );
