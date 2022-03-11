@@ -12,7 +12,7 @@ class LoginScreen extends Component{
             password: ""
         }
     }
-
+    //user log in function
     login = async () => {
 
         //Validation here...
@@ -29,9 +29,10 @@ class LoginScreen extends Component{
                 return response.json()
             }else if(response.status === 400){
                 throw 'Invalid email or password';
-            }else{
-                throw 'Something went wrong';
-            }
+            }else if(response.status === 500){
+                throw 'Server Error'   
+            }else
+            throw 'Something went wrong';
         })
         .then(async (responseJson) => {
                 console.log(responseJson);
@@ -44,6 +45,7 @@ class LoginScreen extends Component{
         })
     }
 
+    //rendering to screen
     render(){
         return (
             <ScrollView>
