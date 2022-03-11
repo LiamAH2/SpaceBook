@@ -7,7 +7,8 @@ import HomeScreen from './screens/home';
 import LoginScreen from './screens/login';
 import SignupScreen from './screens/signup';
 import LogoutScreen from './screens/logout';
-import EditScreen from './screens/edit';
+import EditStack from './screens/editstack';
+//import UpdateDetails from './screens/updatedetails';
 import FriendsScreen from './screens/friends';
 const Drawer = createDrawerNavigator();
 
@@ -20,7 +21,8 @@ class App extends Component{
                     <Drawer.Screen name="Login" component={LoginScreen} />
                     <Drawer.Screen name="Signup" component={SignupScreen} />
                     <Drawer.Screen name="Logout" component={LogoutScreen} />
-                    <Drawer.Screen name="Edit" component={EditScreen} />
+                    <Drawer.Screen name="Edit" component={EditStack} />
+                    
                     <Drawer.Screen name="Friends" component={FriendsScreen} />
                 </Drawer.Navigator>
                 
