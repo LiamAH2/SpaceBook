@@ -30,6 +30,7 @@ class HomeScreen extends Component{
         }
     }
 
+    //logout function
     logout = async () => {
         let token = await AsyncStorage.getItem('@session_token');
         await AsyncStorage.removeItem('@session_token');
@@ -54,17 +55,17 @@ class HomeScreen extends Component{
         })
     }
 
+    //rendering to screen
     render(){
         return (
             <ScrollView>
-                <Text style={{fontSize:18, fontWeight:'bold', padding:5, margin:5}}>If you leave me now, you'll take away the biggest part of me...</Text>
-                <Text style={{fontSize:18, fontWeight:'bold', padding:5, margin:5}}>...Oooooohh, baby please don't go!</Text>
+                <Text>Are you sure you want to log out?</Text>
                 <Button
-                    title="I'm outta here"
+                    title="Log out"
                     onPress={() => this.logout()}
                 />
                 <Button
-                    title="OK, take me home, country roads"
+                    title="Stay logged in"
                     color="darkblue"
                     onPress={() => this.props.navigation.navigate("Home")}
                 />
