@@ -11,6 +11,7 @@ function EditStack() {
       <Stack.Navigator>
         <Stack.Screen name="Edit" component={Edit} />
         <Stack.Screen name="UpdatePhoto" component={UpdatePhoto} />
+        
       </Stack.Navigator>
   );
 }
