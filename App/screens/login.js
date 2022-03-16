@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from 'react-native';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import {View ,Button, StyleSheet } from 'react-native';
+import {TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LoginScreen extends Component{
@@ -48,7 +48,7 @@ class LoginScreen extends Component{
     //rendering to screen
     render(){
         return (
-            <ScrollView>
+            <View style={styles.container1}>
                 <TextInput
                     placeholder="Enter your email..."
                     onChangeText={(email) => this.setState({email})}
@@ -71,9 +71,21 @@ class LoginScreen extends Component{
                     color="darkblue"
                     onPress={() => this.props.navigation.navigate("Signup")}
                 />
-            </ScrollView>
+            </View>
         )
     }
 }
 
 export default LoginScreen;
+//style sheet for page styling
+const styles = StyleSheet.create(
+    {
+      container1:
+      {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        padding: 1
+      },
+    });
