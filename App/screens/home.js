@@ -36,41 +36,8 @@ class HomeScreen extends Component {
     }
   };
 
-  //getting logged in users profile picture
-  getPicture = async () => {
-    const userId = await AsyncStorage.getItem('@user_id');
-    const value = await AsyncStorage.getItem('@session_token');
-    return fetch("http://localhost:3333/api/1.0.0/user/" + userId + "/photo", {
-      'headers': {
-        'X-Authorization': value,
-        'Content-Type': 'image/png'
-      }
-    })
-      .then((response) => {
-        if(response.status === 200){
-          return response.blob();
-        } else if (response.status === 401) {
-          console.log("Un Aurthorised");
-        } else if (response.status === 404) {
-          console.log("Not Found");
-        } else if (response.status === 500) {
-          console.log("Server Error");
-        } else {
-          throw 'Something went wrong';
-        } 
-      })
-      .then((responsePicture) => {
-        let data = URL.createObjectURL(responsePicture);
-        this.setState({
-          isLoading: false,
-          photo: data
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }
-//getting user data from the database to be displayed
+
+  //getting user data from the database to be displayed
   getUserData = async () => {
     const userId = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token');
@@ -101,7 +68,43 @@ class HomeScreen extends Component {
         console.log(error);
       })
   }
-//rending to the screen
+
+  //getting logged in users profile picture
+  getPicture = async () => {
+    const userId = await AsyncStorage.getItem('@user_id');
+    const value = await AsyncStorage.getItem('@session_token');
+    return fetch("http://localhost:3333/api/1.0.0/user/" + userId + "/photo", {
+      'headers': {
+        'X-Authorization': value,
+        'Content-Type': 'image/png'
+      }
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.blob();
+        } else if (response.status === 401) {
+          console.log("Un Aurthorised");
+        } else if (response.status === 404) {
+          console.log("Not Found");
+        } else if (response.status === 500) {
+          console.log("Server Error");
+        } else {
+          throw 'Something went wrong';
+        }
+      })
+      .then((responsePicture) => {
+        let data = URL.createObjectURL(responsePicture);
+        this.setState({
+          isLoading: false,
+          photo: data
+        })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  //rending to the screen
   render() {
 
     if (this.state.isLoading) {
@@ -125,7 +128,7 @@ class HomeScreen extends Component {
 
           <Image
             style={styles.logo}
-            source={{ uri: this.state.photo}}
+            source={{ uri: this.state.photo }}
           />
 
           <Text>{this.state.userData.first_name}</Text>
