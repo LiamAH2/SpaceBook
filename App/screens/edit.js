@@ -15,11 +15,17 @@ class EditScreen extends Component {
   }
 
   async componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+    this.unsubscribe = this.props.navigation.addListener('focus', async() => {
+      let id = await AsyncStorage.getItem('@user_id');
+      if(!this.props.route.params) {
+        id = await AsyncStorage.getItem('@user_id');
+      } else {
+        id = this.props.route.params.user_id;
+    }
       this.checkLoggedIn();
-      this.getUserData();
+      this.getUserData(id);
     });
-    this.getUserData();
+    this.getUserData(id);
   }
 
   componentWillUnmount() {
@@ -28,8 +34,8 @@ class EditScreen extends Component {
   }
 
   //getting logged in users profile picture
-  getPicture = async () => {
-    const userId = await AsyncStorage.getItem('@user_id');
+  getPicture = async (userId) => {
+    //const userId = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token');
     return fetch("http://localhost:3333/api/1.0.0/user/" + userId + "/photo", {
       'headers': {
@@ -62,8 +68,8 @@ class EditScreen extends Component {
       })
   }
   //getting user data
-  getUserData = async () => {
-    const userId = await AsyncStorage.getItem('@user_id');
+  getUserData = async (userId) => {
+    //const userId = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token');
     return fetch("http://localhost:3333/api/1.0.0/user/" + userId, {
       'headers': {
