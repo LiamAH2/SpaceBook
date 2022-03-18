@@ -6,7 +6,7 @@ import Posts from './posts';
 
 const Stack = createNativeStackNavigator();
 
-function FriendStack() {
+function PostStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Posts" component={Posts} />
@@ -14,4 +14,4 @@ function FriendStack() {
   );
 }
 
-export default FriendStack;
+export default PostStack;
