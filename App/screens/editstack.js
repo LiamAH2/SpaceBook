@@ -8,10 +8,10 @@ const Stack = createNativeStackNavigator();
 
 function EditStack() {
   return (
-      <Stack.Navigator>
-        <Stack.Screen name="Edit" component={Edit} />
-        <Stack.Screen name="UpdatePhoto" component={UpdatePhoto} />
-      </Stack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Edit" component={Edit} />
+      <Stack.Screen name="UpdatePhoto" component={UpdatePhoto} />
+    </Stack.Navigator>
   );
 }
 

@@ -7,10 +7,9 @@ const Stack = createNativeStackNavigator();
 
 function FriendStack() {
   return (
-      <Stack.Navigator>
-       <Stack.Screen name="Friends" component={Friends} />
-      </Stack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Friends" component={Friends} />
+    </Stack.Navigator>
   );
 }
-
 export default FriendStack;

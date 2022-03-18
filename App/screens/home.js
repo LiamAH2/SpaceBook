@@ -1,7 +1,9 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet, Image, } from 'react-native';
+import {
+  View, Text, Button, StyleSheet, Image,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -10,18 +12,18 @@ class HomeScreen extends Component {
     this.state = {
       isLoading: true,
       listData: [],
-      userData: []
-    }
+      userData: [],
+    };
   }
 
- async componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', async() => {
+  async componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', async () => {
       let id = await AsyncStorage.getItem('@user_id');
-      if(!this.props.route.params) {
+      if (!this.props.route.params) {
         id = await AsyncStorage.getItem('@user_id');
       } else {
         id = this.props.route.params.user_id;
-    }
+      }
       this.checkLoggedIn();
       this.getUserData(id);
       this.getPicture(id);
@@ -32,7 +34,7 @@ class HomeScreen extends Component {
     this.unsubscribe();
   }
 
-  //checking user is logged in, if not, redirect to log in page
+  // checking user is logged in, if not, redirect to log in page
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     if (value == null) {
@@ -40,76 +42,74 @@ class HomeScreen extends Component {
     }
   };
 
-
-  //getting user data from the database to be displayed
+  // getting user data from the database to be displayed
   getUserData = async (userId) => {
     const value = await AsyncStorage.getItem('@session_token');
-    return fetch("http://localhost:3333/api/1.0.0/user/" + userId, {
-      'headers': {
+    return fetch(`http://localhost:3333/api/1.0.0/user/${userId}`, {
+      headers: {
         'X-Authorization': value,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
       .then((response) => {
         if (response.status === 200) {
-          return response.json()
-        } else if (response.status === 401) {
-          console.log("Un Aurthorised");
+          return response.json();
+        } if (response.status === 401) {
+          console.log('Un Aurthorised');
         } else if (response.status === 404) {
-          console.log("Not Found");
+          console.log('Not Found');
         } else if (response.status === 500) {
-          console.log("Server Error");
+          console.log('Server Error');
         } else {
           throw 'Something went wrong';
         }
       })
       .then((responseJson) => {
         this.setState({
-          userData: responseJson
-        })
+          userData: responseJson,
+        });
       }).catch((error) => {
         console.log(error);
-      })
-  }
+      });
+  };
 
-  //getting logged in users profile picture
+  // getting logged in users profile picture
   getPicture = async (userId) => {
     const value = await AsyncStorage.getItem('@session_token');
-    return fetch("http://localhost:3333/api/1.0.0/user/" + userId + "/photo", {
+    return fetch(`http://localhost:3333/api/1.0.0/user/${userId}/photo`, {
       method: 'GET',
-      'headers': {
+      headers: {
         'X-Authorization': value,
-        'Content-Type': 'image/png'
-      }
+        'Content-Type': 'image/png',
+      },
     })
       .then((response) => {
         if (response.status === 200) {
           return response.blob();
-        } else if (response.status === 401) {
-          console.log("Un Aurthorised");
+        } if (response.status === 401) {
+          console.log('Un Aurthorised');
         } else if (response.status === 404) {
-          console.log("Not Found");
+          console.log('Not Found');
         } else if (response.status === 500) {
-          console.log("Server Error");
+          console.log('Server Error');
         } else {
           throw 'Something went wrong';
         }
       })
       .then((responsePicture) => {
-        let data = URL.createObjectURL(responsePicture);
+        const data = URL.createObjectURL(responsePicture);
         this.setState({
           isLoading: false,
-          photo: data
-        })
+          photo: data,
+        });
       })
       .catch((error) => {
         console.log(error);
-      })
-  }
+      });
+  };
 
-  //rending to the screen
+  // rending to the screen
   render() {
-
     if (this.state.isLoading) {
       return (
         <View
@@ -118,51 +118,50 @@ class HomeScreen extends Component {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+        >
           <Text>Loading..</Text>
         </View>
       );
-    } else {
-      //displaying user image, first and last name as well as email
-      //styling being called from stylesheet
-      //buttons for navigating specific screens
-      return (
-        <View style={styles.container1}>
-
-          <Image
-            style={styles.logo}
-            source={{ uri: this.state.photo }}
-          />
-
-          <Text>{this.state.userData.first_name}</Text>
-          <Text>{this.state.userData.last_name}</Text>
-
-          <Text>{this.state.userData.email}</Text>
-
-          <Button
-            title="Edit Profile"
-            onPress={() => this.props.navigation.navigate("Edit")}
-          />
-          <Button
-            title="Friends"
-            onPress={() => this.props.navigation.navigate("Friends")}
-          />
-          <Button
-            title="Posts"
-            onPress={() => this.props.navigation.navigate("Posts")}
-          />
-          <Button
-            title="Log Out"
-            onPress={() => this.props.navigation.navigate("Logout")}
-      />
-        </View>
-      );
     }
+    // displaying user image, first and last name as well as email
+    // styling being called from stylesheet
+    // buttons for navigating specific screens
+    return (
+      <View style={styles.container1}>
 
+        <Image
+          style={styles.logo}
+          source={{ uri: this.state.photo }}
+        />
+
+        <Text>{this.state.userData.first_name}</Text>
+        <Text>{this.state.userData.last_name}</Text>
+
+        <Text>{this.state.userData.email}</Text>
+
+        <Button
+          title="Edit Profile"
+          onPress={() => this.props.navigation.navigate('Edit')}
+        />
+        <Button
+          title="Friends"
+          onPress={() => this.props.navigation.navigate('Friends')}
+        />
+        <Button
+          title="Posts"
+          onPress={() => this.props.navigation.navigate('Posts')}
+        />
+        <Button
+          title="Log Out"
+          onPress={() => this.props.navigation.navigate('Logout')}
+        />
+      </View>
+    );
   }
 }
 export default HomeScreen;
-//style sheet for page styling
+// style sheet for page styling
 const styles = StyleSheet.create(
   {
     container1:
@@ -171,14 +170,12 @@ const styles = StyleSheet.create(
       flexDirection: 'column',
       justifyContent: 'space-evenly',
       alignItems: 'center',
-      padding: 10
+      padding: 10,
     },
     logo:
     {
       width: 200,
-      height: 200
-    }
-  });
-
-
-
+      height: 200,
+    },
+  },
+);
