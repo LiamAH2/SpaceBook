@@ -1,9 +1,12 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable camelcase */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  View, Text, Button, StyleSheet, Image, ScrollView, TextInput,
+  View, Text, Button, Image, ScrollView, TextInput,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles';
 
 class EditScreen extends Component {
   constructor(props) {
@@ -41,6 +44,7 @@ class EditScreen extends Component {
           return response.blob();
         } if (response.status === 401) {
           console.log('Un Aurthorised');
+          this.props.navigate.navigation('Login');
         } else if (response.status === 404) {
           console.log('Not Found');
         } else if (response.status === 500) {
@@ -75,6 +79,7 @@ class EditScreen extends Component {
           return response.json();
         } if (response.status === 401) {
           console.log('Un Aurthorised');
+          this.props.navigate.navigation('Login');
         } else if (response.status === 403) {
           console.log('Forbidden');
         } else if (response.status === 404) {
@@ -153,7 +158,7 @@ class EditScreen extends Component {
       });
   };
 
-  // displaying to page
+  // Rendering edit functions to page
   render() {
     return (
       // eslint-disable-next-line react/jsx-filename-extension
@@ -195,36 +200,9 @@ class EditScreen extends Component {
             title="Update info"
             onPress={() => this.edit()}
           />
-          <Button
-            title="Return home"
-            onPress={() => this.props.navigation.navigate('Home')}
-          />
         </ScrollView>
       </View>
     );
   }
 }
-
 export default EditScreen;
-const styles = StyleSheet.create(
-  {
-    container1:
-    {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-      padding: 10,
-    },
-    logo:
-    {
-      width: 200,
-      height: 200,
-    },
-    camera:
-    {
-      flex: 1,
-    },
-
-  },
-);
