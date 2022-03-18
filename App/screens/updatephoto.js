@@ -87,7 +87,7 @@ class UpdatePhoto extends Component {
     // if camera has permissions granted, will display it to page
     if (this.state.hasPermission) {
       return (
-        <View style={styles.container}>
+        <View style={styles.container1}>
           <Camera
             style={styles.camera}
             type={this.state.type}
