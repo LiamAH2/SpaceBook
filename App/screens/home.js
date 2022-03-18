@@ -1,9 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
-  View, Text, Button, StyleSheet, Image,
+  View, Text, Button, Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -18,15 +19,15 @@ class HomeScreen extends Component {
 
   async componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', async () => {
-      let id = await AsyncStorage.getItem('@user_id');
+      let nullUserID = await AsyncStorage.getItem('@user_id');
       if (!this.props.route.params) {
-        id = await AsyncStorage.getItem('@user_id');
+        nullUserID = await AsyncStorage.getItem('@user_id');
       } else {
-        id = this.props.route.params.user_id;
+        nullUserID = this.props.route.params.user_id;
       }
       this.checkLoggedIn();
-      this.getUserData(id);
-      this.getPicture(id);
+      this.getUserData(nullUserID);
+      this.getPicture(nullUserID);
     });
   }
 
@@ -56,6 +57,7 @@ class HomeScreen extends Component {
           return response.json();
         } if (response.status === 401) {
           console.log('Un Aurthorised');
+          this.props.navigate.navigation('Login');
         } else if (response.status === 404) {
           console.log('Not Found');
         } else if (response.status === 500) {
@@ -88,6 +90,7 @@ class HomeScreen extends Component {
           return response.blob();
         } if (response.status === 401) {
           console.log('Un Aurthorised');
+          this.props.navigate.navigation('Login');
         } else if (response.status === 404) {
           console.log('Not Found');
         } else if (response.status === 500) {
@@ -141,18 +144,22 @@ class HomeScreen extends Component {
         <Text>{this.state.userData.email}</Text>
 
         <Button
+          color="#ff5c5c"
           title="Edit Profile"
           onPress={() => this.props.navigation.navigate('Edit')}
         />
         <Button
+          color="#ff5c5c"
           title="Friends"
           onPress={() => this.props.navigation.navigate('Friends')}
         />
         <Button
+          color="#ff5c5c"
           title="Posts"
           onPress={() => this.props.navigation.navigate('Posts')}
         />
         <Button
+          color="#ff5c5c"
           title="Log Out"
           onPress={() => this.props.navigation.navigate('Logout')}
         />
@@ -161,21 +168,3 @@ class HomeScreen extends Component {
   }
 }
 export default HomeScreen;
-// style sheet for page styling
-const styles = StyleSheet.create(
-  {
-    container1:
-    {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-      padding: 10,
-    },
-    logo:
-    {
-      width: 200,
-      height: 200,
-    },
-  },
-);

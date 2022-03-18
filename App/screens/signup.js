@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable implicit-arrow-linebreak */
 
 import React, { Component } from 'react';
 import { Button, ScrollView, TextInput } from 'react-native';

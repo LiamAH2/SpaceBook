@@ -1,7 +1,12 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet, FlatList } from 'react-native';
+import {
+  View, Text, Button, FlatList,
+}
+  from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
+import styles from '../styles';
 
 class FriendsScreen extends Component {
   constructor(props) {
@@ -14,7 +19,7 @@ class FriendsScreen extends Component {
       friendList: [],
       friendSearch: [],
       sendRequest: [],
-    }
+    };
   }
 
   componentDidMount() {
@@ -134,7 +139,7 @@ class FriendsScreen extends Component {
       });
   };
 
-  //Accept request POST
+  // Accept request POST
   acceptRequest = async (user_id) => {
     const value = await AsyncStorage.getItem('@session_token');
     return fetch(`http://localhost:3333/api/1.0.0/friendrequests/${user_id}`, {
@@ -229,6 +234,7 @@ class FriendsScreen extends Component {
       });
   };
 
+  // Rendering the search, request list and accept/reject to the screen
   render() {
     return (
       <View style={styles.container1}>
@@ -284,9 +290,9 @@ class FriendsScreen extends Component {
         <FlatList
           data={this.state.requestList}
           renderItem={({ item }) => (
-            <View>
+            <View style={styles.friends}>
               <Text>
-                Add +
+                Add
                 {' '}
                 {item.first_name}
                 {' '}
@@ -306,31 +312,9 @@ class FriendsScreen extends Component {
           )}
           keyExtractor={(item) => item.user_id.toString()}
         />
-        <Button
-          title="Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
       </View>
 
     );
   }
 }
 export default FriendsScreen;
-
-const styles = StyleSheet.create(
-  {
-    container1:
-    {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-      padding: 50,
-    },
-    logo:
-    {
-      width: 200,
-      height: 200,
-    },
-  },
-);

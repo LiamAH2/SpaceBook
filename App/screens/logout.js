@@ -1,7 +1,10 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-underscore-dangle */
 
 import React, { Component } from 'react';
-import { Text, ScrollView, Button } from 'react-native';
+import { Text, View, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -59,9 +62,10 @@ class HomeScreen extends Component {
   // rendering to screen
   render() {
     return (
-      <ScrollView>
+      <View style={styles.container1}>
         <Text>Are you sure you want to log out?</Text>
         <Button
+          color="#ff5c5c"
           title="Log out"
           onPress={() => this.logout()}
         />
@@ -70,7 +74,7 @@ class HomeScreen extends Component {
           color="darkblue"
           onPress={() => this.props.navigation.navigate('Home')}
         />
-      </ScrollView>
+      </View>
     );
   }
 }

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity,
+  View, Text, TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera } from 'expo-camera';
+import styles from '../styles';
 
 // updating users picture using the camera
 class UpdatePhoto extends Component {
@@ -22,11 +23,9 @@ class UpdatePhoto extends Component {
     this.unsubscribe = this.props.navigation.addListener('focus', async () => {
       this.checkLoggedIn();
       const { status } = await Camera.requestCameraPermissionsAsync();
-      console.log('Status', status);
       this.setState({ hasPermission: status === 'granted', isLoading: false });
     });
     const { status } = await Camera.requestCameraPermissionsAsync();
-    console.log('Status', status);
     this.setState({ hasPermission: status === 'granted', isLoading: false });
   }
 
@@ -114,29 +113,5 @@ class UpdatePhoto extends Component {
     );
   }
 }
-
-// styling for the camera
-const styles = StyleSheet.create(
-  {
-    container:
-    {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-      padding: 10,
-    },
-    logo:
-    {
-      width: 200,
-      height: 200,
-    },
-    camera:
-    {
-      flex: 1,
-    },
-
-  },
-);
 
 export default UpdatePhoto;

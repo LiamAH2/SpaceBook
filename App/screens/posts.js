@@ -1,8 +1,10 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import {
-  View, Button, StyleSheet,
+  View, Button, ScrollView, TextInput, Text, FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles';
 
 class PostScreen extends Component {
   constructor(props) {
@@ -10,11 +12,11 @@ class PostScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: [],
       userData: [],
       postList: [],
       newPost: [],
       getPost: [],
+      text: '',
     };
   }
 
@@ -22,8 +24,10 @@ class PostScreen extends Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
       this.postList();
+      this.getPost();
     });
     this.postList();
+    this.getPost();
   }
 
   componentWillUnmount() {
@@ -74,6 +78,7 @@ class PostScreen extends Component {
         this.setState({
           isLoading: false,
           postList: responseJson,
+          text: responseJson.text,
         });
       })
       .catch((error) => {
@@ -95,9 +100,11 @@ class PostScreen extends Component {
         'X-Authorization': value,
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(this.state),
     })
       .then((response) => {
         if (response.status === 201) {
+          this.props.navigation.navigate('Home');
           return response.json();
         } if (response.status === 401) {
           this.props.navigation.navigate('Login');
@@ -109,12 +116,6 @@ class PostScreen extends Component {
         } else {
           throw 'Something went wrong';
         }
-      })
-      .then((responseJson) => {
-        this.setState({
-          isLoading: false,
-          newPost: responseJson,
-        });
       })
       .catch((error) => {
         console.log(error);
@@ -157,6 +158,7 @@ class PostScreen extends Component {
         this.setState({
           isLoading: false,
           getPost: responseJson,
+          text: responseJson.text,
         });
       })
       .catch((error) => {
@@ -169,11 +171,10 @@ class PostScreen extends Component {
     delete post from current logged in user
     err list - 200, 401, 403, 404, 500
     */
-  deletePost = async () => {
+  deletePost = async (post_ID) => {
     const userId = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token');
-    const postID = await AsyncStorage.getItem('@post_id');
-    return fetch(`http://localhost:3333/api/1.0.0/user/${userId}/post${postID}`, {
+    return fetch(`http://localhost:3333/api/1.0.0/user/${userId}/post${post_ID}`, {
       method: 'DELETE',
       headers: {
         'X-Authorization': value,
@@ -195,13 +196,6 @@ class PostScreen extends Component {
           throw 'Something went wrong';
         }
       })
-      .then((responseJson) => {
-        this.setState({
-          isLoading: false,
-          postList: responseJson,
-
-        });
-      })
       .catch((error) => {
         console.log(error);
       });
@@ -218,7 +212,7 @@ class PostScreen extends Component {
     const postID = await AsyncStorage.getItem('@post_id');
     const to_send = {};
 
-    if (this.state.post != this.state.userData.post) {
+    if (this.state.post !== this.state.userData.post) {
       to_send.post = this.state.post;
     }
     console.log(JSON.stringify(to_send));
@@ -345,31 +339,53 @@ class PostScreen extends Component {
   render() {
     return (
       <View style={styles.container1}>
-        <Button
-          title="Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
+        <ScrollView>
+          <TextInput
+            placeholder="Make a new post!"
+            onChangeText={(text) => this.setState({ text })}
+            Value={this.state.text}
+            style={{ padding: 5, borderWidth: 1, margin: 5 }}
+          />
+          <Button
+            title="Submit Post"
+            onPress={() => this.newPost()}
+          />
+          <FlatList
+            data={this.state.postList}
+            renderItem={({ item }) => (
+              <View style={styles.post}>
+                <Text>
+                  {item.text}
+                  {' '}
+                  <Button
+                    color="green"
+                    title="Like"
+                    onPress={() => this.postLike()}
+                  />
+                  <Button
+                    color="red"
+                    title="Dislike"
+                    onPress={() => this.unlikePost()}
+                  />
+                  <Button
+                    color="orange"
+                    title="Delete Post"
+                    onPress={() => this.deletePost()}
+                  />
+                  <Button
+                    color="yellow"
+                    title="Edit Post"
+                    onPress={() => this.editPost()}
+                  />
+                </Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.post_id.toString()}
+          />
+        </ScrollView>
       </View>
     );
   }
 }
 
 export default PostScreen;
-
-const styles = StyleSheet.create(
-  {
-    container1:
-        {
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-          padding: 10,
-        },
-    logo:
-        {
-          width: 200,
-          height: 200,
-        },
-  },
-);

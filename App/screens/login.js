@@ -1,8 +1,10 @@
+/* eslint-disable implicit-arrow-linebreak */
 
 import React, { Component } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles';
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -43,8 +45,7 @@ class LoginScreen extends Component {
       })
       .catch((error) => {
         console.log(error);
-      })
-    ;
+      });
 
   // rendering to screen
   render() {
@@ -64,6 +65,7 @@ class LoginScreen extends Component {
           style={{ padding: 5, borderWidth: 1, margin: 5 }}
         />
         <Button
+          color="green"
           title="Login"
           onPress={() => this.login()}
         />
@@ -78,16 +80,3 @@ class LoginScreen extends Component {
 }
 
 export default LoginScreen;
-// style sheet for page styling
-const styles = StyleSheet.create(
-  {
-    container1:
-      {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        padding: 1,
-      },
-  },
-);
