@@ -43,7 +43,6 @@ class HomeScreen extends Component {
 
   //getting user data from the database to be displayed
   getUserData = async (userId) => {
-    //const userId = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token');
     return fetch("http://localhost:3333/api/1.0.0/user/" + userId, {
       'headers': {
@@ -75,9 +74,9 @@ class HomeScreen extends Component {
 
   //getting logged in users profile picture
   getPicture = async (userId) => {
-    //const userId = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token');
     return fetch("http://localhost:3333/api/1.0.0/user/" + userId + "/photo", {
+      method: 'GET',
       'headers': {
         'X-Authorization': value,
         'Content-Type': 'image/png'
@@ -155,7 +154,7 @@ class HomeScreen extends Component {
           <Button
             title="Log Out"
             onPress={() => this.props.navigation.navigate("Logout")}
-          />
+      />
         </View>
       );
     }
